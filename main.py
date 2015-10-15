@@ -1,7 +1,8 @@
-import pygame as pygame
+import pygame
 import numpy as np
 import grid as grid
 import sys
+import status_io.server
 
 
 def main():
@@ -11,13 +12,14 @@ def main():
 
     g = grid.Grid()
 
-    surface = pygame.surfarray.make_surface(g.colors)
+    surface = pygame.surfarray.make_surface(g.get_pygame_grid())
     surface = pygame.transform.scale(surface, (1024, 1024))
-    surface = pygame.transform.flip(surface, 0, 1)
-    surface = pygame.transform.rotate(surface, -90)
     screen = pygame.display.set_mode((1024, 1024))
     screen.blit(surface, (0, 0))
     pygame.display.flip()
+
+    s = status_io.server.IOHandler()
+    s.start()
 
     pause = False
 

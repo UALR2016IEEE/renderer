@@ -1,12 +1,11 @@
-import math
 import random
 import numpy as np
 
 
 class Grid:
     def __init__(self):
-        self.data = []
-        self.colors = []
+        self.data = np.loadtxt("field.csv", delimiter=",")
+        self.colors = np.zeros(shape=(96, 96, 3))
         self.objects = {
             'FLOOR': 0,
             'WALL': 1,
@@ -37,9 +36,6 @@ class Grid:
         self.init_grid()
 
     def init_grid(self):
-        self.data = np.loadtxt("field.csv", delimiter=",")
-        self.colors = np.zeros(shape=(96, 96, 3))
-
         # Choose victims - colorsLeft are left top/bottom colors, colorsRight are right top/bottom colors [0 = red, 1 = yellow]
         vColorsCity = random.randint(0, 1)
         vColorsOffroad = random.randint(0, 1)
@@ -97,3 +93,6 @@ class Grid:
 
         for key, value in self.object_colors.items():
             self.colors[self.data == self.objects[key]] = value
+
+    def get_pygame_grid(self):
+        return np.transpose(self.colors, (1, 0, 2))
