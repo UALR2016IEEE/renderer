@@ -17,7 +17,9 @@ def main():
             data = s.incoming.get()
             if data[0] == 'grid-colors':
                 # stupid x/y axis differences
-                r.grid = data[1]
+                r.set_grid(data[1])
+            if data[0] == 'robot-pos':
+                r.update_robot(data[1])
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pause = True
