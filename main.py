@@ -1,33 +1,30 @@
 import pygame
 import numpy as np
-import grid as grid
 import sys
 import status_io.server
+import draw.renderer
 
 
 def main():
 
-    pygame.init()
-    surface = pygame.Surface((96, 96))
-
-    g = grid.Grid()
-
-    surface = pygame.surfarray.make_surface(g.get_pygame_grid())
-    surface = pygame.transform.scale(surface, (1024, 1024))
-    screen = pygame.display.set_mode((1024, 1024))
-    screen.blit(surface, (0, 0))
-    pygame.display.flip()
-
+    r = draw.renderer.Renderer()
     s = status_io.server.IOHandler()
     s.start()
 
-    pause = False
-
-    while not pause:
+    while not s.halt:
+        # process server data
+        while not s.incoming.empty():
+            data = s.incoming.get()
+            if data[0] == 'grid-colors':
+                # stupid x/y axis differences
+                r.grid = data[1]
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pause = True
+                s.stop()
                 pygame.quit()
                 sys.exit()
+        r.update_screen()
 
 
 if __name__ == '__main__':
