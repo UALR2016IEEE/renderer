@@ -39,3 +39,25 @@ class Robot(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.imageMaster, math.degrees(data[2]))
         self.rect = self.image.get_rect()
         self.rect.center = center
+
+
+class Lidar(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([960, 960])
+        self.image.fill((0, 0, 0))
+        self.image.set_colorkey((0, 0, 0))
+        self.rect = self.image.get_rect()
+
+    def update(self, data):
+        self.image.fill((0, 0, 0))
+        rx = data[0]
+        ry = data[1]
+        angle = data[2]
+        scans = data[3]
+
+        for scan in scans:
+            dx = scan[0] * math.cos(scan[1] + angle)
+            dy = scan[0] * math.sin(scan[1] + angle)
+            pygame.draw.rect(self.image, (255, 0, 0), (int(rx + dx) - 2, int(ry + dy) - 2, 4, 4))
+            pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(rx + dx), int(ry + dy)))

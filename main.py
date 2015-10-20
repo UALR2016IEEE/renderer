@@ -20,12 +20,17 @@ def main():
                 r.set_grid(data[1])
             if data[0] == 'robot-pos':
                 r.update_robot(data[1])
+            if data[0] == 'lidar-points':
+                r.paint_lidar(data[1])
+
+        # process pygame events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                pause = True
                 s.stop()
                 pygame.quit()
                 sys.exit()
+
+        # update the screen
         r.update_screen()
 
 
