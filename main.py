@@ -1,6 +1,5 @@
 import pygame
 import numpy as np
-import sys
 import status_io.server
 import draw.renderer
 
@@ -11,7 +10,9 @@ def main():
     s = status_io.server.IOHandler()
     s.start()
 
-    while not s.halt:
+    running = True
+
+    while not s.halt.value:
         # process server data
         while not s.incoming.empty():
             data = s.incoming.get()
@@ -26,13 +27,13 @@ def main():
         # process pygame events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                s.stop()
+                s.finish()
                 pygame.quit()
-                sys.exit()
+                running = False
 
-        # update the screen
-        r.update_screen()
-
+        if running:
+            # update the screen
+            r.update_screen()
 
 if __name__ == '__main__':
     np.set_printoptions(threshold=99999999, linewidth=9999999)
