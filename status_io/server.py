@@ -53,7 +53,6 @@ class IOHandler(multiprocessing.Process):
         print('server running, waiting for client connection')
         while not halt.value:
             r, w, e = select.select([server], [], [], 1)
-            print('r', r)
             if len(r) > 0:
                 client = server.accept()[0]
                 t = Thread(target=self.handle_client, args=(client, halt, incoming, outgoing))
