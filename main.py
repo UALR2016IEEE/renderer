@@ -9,12 +9,13 @@ def main():
     r = draw.renderer.Renderer()
     s = status_io.server.IOHandler()
     s.start()
+    clock = pygame.time.Clock()
 
     running = True
 
     while not s.halt.value:
         # process server data
-        while not s.incoming.empty():
+        if not s.incoming.empty():
             data = s.incoming.get()
             if data[0] == 'grid-colors':
                 # stupid x/y axis differences
@@ -34,6 +35,7 @@ def main():
         if running:
             # update the screen
             r.update_screen()
+            clock.tick(60)
 
 if __name__ == '__main__':
     np.set_printoptions(threshold=99999999, linewidth=9999999)
