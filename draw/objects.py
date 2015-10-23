@@ -34,9 +34,9 @@ class Robot(pygame.sprite.Sprite):
         self.rect.center = (30, 30)
 
     def update(self, data):
-        center = (data['x'], data['y'])
+        center = data.x, data.y
         self.rect.center = center
-        self.image = pygame.transform.rotate(self.imageMaster, math.degrees(data['r']))
+        self.image = pygame.transform.rotate(self.imageMaster, math.degrees(data.r))
         self.rect = self.image.get_rect()
         self.rect.center = center
 
@@ -51,10 +51,11 @@ class Lidar(pygame.sprite.Sprite):
 
     def update(self, data, aggregate=False):
         if not aggregate:
+            # print(data[0].x, data[0].y, math.degrees(data[0].r))
             self.image.fill((0, 0, 0))
-        rx = data[0]['x']
-        ry = data[0]['y']
-        angle = data[0]['r']
+        rx = data[0].x
+        ry = data[0].y
+        angle = data[0].r
         scans = data[1]
 
         # print('angle', math.degrees(angle))

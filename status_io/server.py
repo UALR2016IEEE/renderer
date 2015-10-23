@@ -1,10 +1,6 @@
 import multiprocessing
 import multiprocessing.connection
 from threading import Thread
-import select
-import socket
-import pickle
-import struct
 
 
 class IOHandler(multiprocessing.Process):
@@ -27,36 +23,27 @@ class IOHandler(multiprocessing.Process):
     def handle_client(self, client, halt, incoming, outgoing):
         while not halt.value:
             try:
-                buf = b''
+                data = client.recv()
 
-                while len(buf) < 4:
-                    buf += client.recv(4 - len(buf))
+                # if data[0] == 'lidar-points':
+                #     print(data[0])
+                #     print(data[1][0].y, data[1][0].x, data[1][0].r)
+                #     for i in range(10):
+                #         print(data[1][1][i])
 
-                length = struct.unpack('!I', buf)[0]
-                packet = b''
-                while len(packet) < length:
-                    packet += client.recv(16777216)
-
-                packet = packet[:length]
-                data = pickle.loads(packet)
                 incoming.put(data)
-            except ConnectionError:
+            except (ConnectionError, EOFError):
                 print("connection error with client, closed")
                 break
 
     def io_inf(self, incoming, outgoing, halt):
         host, port = 'localhost', 9998
-        # server = multiprocessing.connection.Listener((host, port))
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.bind((host, port))
-        server.listen(5)
+        server = multiprocessing.connection.Listener((host, port))
         print('server running, waiting for client connection')
         while not halt.value:
-            r, w, e = select.select([server], [], [], 1)
-            if len(r) > 0:
-                client = server.accept()[0]
-                t = Thread(target=self.handle_client, args=(client, halt, incoming, outgoing))
-                t.daemon = True
-                t.start()
-                print('client connected')
+            client = server.accept()
+            t = Thread(target=self.handle_client, args=(client, halt, incoming, outgoing))
+            t.daemon = True
+            t.start()
+            print('client connected')
         server.close()
