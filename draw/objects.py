@@ -58,15 +58,21 @@ class Lidar(pygame.sprite.Sprite):
         angle = data[0].r
         scans = data[1]
 
-        # print('angle', math.degrees(angle))
+        first = True
 
         for scan in scans:
-            dx = scan[0] * math.cos(scan[1] + angle)
-            dy = -scan[0] * math.sin(scan[1] + angle)
-            # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
-            pygame.draw.rect(self.image, (255, 0, 0), (int(rx + dx), int(ry + dy), 2, 2))
-            if not aggregate:
-                pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(rx + dx), int(ry + dy)))
+            if scan[0] > 0:
+                dx = scan[0] * math.cos(scan[1] + angle)
+                dy = -scan[0] * math.sin(scan[1] + angle)
+                # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
+                pygame.draw.rect(self.image, (255, 0, 0), (int(rx + dx), int(ry + dy), 2, 2))
+                if not aggregate:
+                    if first:
+                        pygame.draw.line(self.image, (0, 0, 255), (rx, ry), (int(rx + dx), int(ry + dy)))
+                        pygame.draw.rect(self.image, (0, 0, 255), (int(rx + dx), int(ry + dy), 2, 2))
+                        first = False
+                    else:
+                        pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(rx + dx), int(ry + dy)))
 
 
 class Background(pygame.sprite.Sprite):
