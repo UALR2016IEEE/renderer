@@ -62,8 +62,9 @@ class Lidar(pygame.sprite.Sprite):
 
         for scan in scans:
             if scan[0] > 0:
-                dx = scan[0] * math.cos(scan[1] + angle)
-                dy = -scan[0] * math.sin(scan[1] + angle)
+                # turn scan data back to tenths of an inch
+                dx = scan[0] * math.cos(scan[1] + angle) / 2.54
+                dy = -scan[0] * math.sin(scan[1] + angle) / 2.54
                 # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
                 pygame.draw.rect(self.image, (255, 0, 0), (int(rx + dx), int(ry + dy), 2, 2))
                 if not aggregate:
