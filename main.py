@@ -2,10 +2,13 @@ import pygame
 import numpy as np
 import status_io.server
 import draw.renderer
+from utils.data_structures import Point3
+import math
 
 
 def main():
 
+    lidar_pos = Point3(480, 480, math.radians(90))
     r = draw.renderer.Renderer()
     s = status_io.server.IOHandler()
     s.start()
@@ -17,13 +20,29 @@ def main():
         # process server data
         if not s.incoming.empty():
             data = s.incoming.get()
-            if data[0] == 'grid-colors':
+
+            # top level render control commands
+            if data[0] == 'reset':
+                r.reset()
+            elif data[0] == 'full-simulation':
+                r.reset()
+                r.setup_full_simulation()
+            elif data[0] == 'lidar-test':
+                r.reset()
+                r.setup_lidar_test()
+
+            # commands used for full-simulation rendering
+            elif data[0] == 'grid-colors':
                 # stupid x/y axis differences
                 r.set_grid(data[1])
-            if data[0] == 'robot-pos':
+            elif data[0] == 'robot-pos':
                 r.update_robot(data[1])
-            if data[0] == 'lidar-points':
+            elif data[0] == 'lidar-points':
                 r.paint_lidar(data[1])
+
+            # commands used for lidar-test rendering
+            elif data[0] == 'lidar-test-points':
+                r.paint_lidar((lidar_pos, data[1]))
 
         # process pygame events
         for event in pygame.event.get():
