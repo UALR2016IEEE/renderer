@@ -53,7 +53,7 @@ class Renderer:
         self.primary_objects = pygame.sprite.LayeredUpdates()
 
         # add the background
-        self.primary_objects.add(draw.objects.Background(), layer=0)
+        self.primary_objects.add(draw.objects.Background(distances=True), layer=0)
         # add the lidar overlay
         self.primary_objects.add(draw.objects.Lidar(), layer=2)
 

@@ -81,9 +81,16 @@ class Lidar(pygame.sprite.Sprite):
 
 
 class Background(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, distances=False):
         pygame.sprite.Sprite.__init__(self)
 
         self.image = pygame.Surface([960, 960])
         self.image.fill((0, 0, 0))
         self.rect = self.image.get_rect()
+
+        if distances:
+            self.make_distance_circles()
+
+    def make_distance_circles(self):
+        for i in range(1, 5):
+            pygame.draw.circle(self.image, (128, 128, 128), (480, 480), i * 120, 4)
