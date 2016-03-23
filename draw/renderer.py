@@ -1,5 +1,7 @@
+import math
 import pygame
 import draw.objects
+from utils.data_structures import Point3
 
 
 class Renderer:
@@ -8,12 +10,14 @@ class Renderer:
         self.screen = pygame.display.set_mode((640, 480))
         self.update = None
 
-        font = pygame.font.SysFont('monospace', 20)
-        self.label = font.render('Waiting for client connection.', 1, (255, 255, 255))
+        self.font = pygame.font.SysFont('monospace', 20)
+        self.label = self.font.render('Waiting for client connection.', 1, (255, 255, 255))
 
         self.primary_objects = None
         self.secondary_objects = None
         self.aggregate_lidar = False
+
+        self.robot_pos = Point3()
 
     def reset(self):
         self.screen = pygame.display.set_mode((640, 480))
@@ -66,6 +70,7 @@ class Renderer:
     def update_robot(self, data):
         robot = self.primary_objects.get_sprites_from_layer(3)[0]
         robot.update(data)
+        self.robot_pos = data
 
     def paint_lidar(self, data):
         if self.primary_objects is not None:
@@ -83,6 +88,8 @@ class Renderer:
         if self.update == 'full-simulation':
             self.primary_objects.draw(self.primary)
             self.secondary_objects.draw(self.secondary)
+            label = self.font.render('(x= ' + str(self.robot_pos.x) + ', y= ' + str(self.robot_pos.y) + ', r= ' + str(math.degrees(self.robot_pos.r)) + ')', 1, (255, 0, 0))
+            self.screen.blit(label, (20, 20))
         elif self.update == 'lidar-test':
             self.primary_objects.draw(self.screen)
         else:
