@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 import status_io.server
 import draw.renderer
+import simulate.controller
 from utils.data_structures import Point3
 import math
 
@@ -27,6 +28,11 @@ def main():
             elif data[0] == 'full-simulation':
                 r.reset()
                 r.setup_full_simulation()
+
+                # have the server set up the grid by defualt - can still do grid-colors and reset if needed
+                sim = simulate.controller.Controller(Point3())
+                sim.init_grid()
+                r.set_grid(sim.grid.get_pygame_grid())
             elif data[0] == 'lidar-test':
                 r.reset()
                 r.setup_lidar_test()
