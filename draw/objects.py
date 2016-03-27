@@ -17,6 +17,76 @@ class Grid(pygame.sprite.Sprite):
         pass
 
 
+class Point(pygame.sprite.Sprite):
+    def __init__(self, vertex):
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.vertex = vertex
+
+        # make a sprite for the point
+        self.imageMasterNormal = pygame.Surface([10, 10])
+        pygame.draw.rect(self.imageMasterNormal, (0, 0, 255), (0, 0, 10, 10))
+        self.imageMasterNormal = self.imageMasterNormal.convert_alpha()
+
+        self.imageMasterStart = pygame.Surface([10, 10])
+        pygame.draw.rect(self.imageMasterStart, (255, 0, 255), (0, 0, 10, 10))
+        self.imageMasterStart = self.imageMasterStart.convert_alpha()
+
+        self.imageMasterOnPath = pygame.Surface([10, 10])
+        pygame.draw.rect(self.imageMasterOnPath, (128, 128, 128), (0, 0, 10, 10))
+        self.imageMasterOnPath = self.imageMasterOnPath.convert_alpha()
+
+        self.imageMasterEnd = pygame.Surface([10, 10])
+        pygame.draw.rect(self.imageMasterEnd, (0, 255, 255), (0, 0, 10, 10))
+        self.imageMasterEnd = self.imageMasterEnd.convert_alpha()
+
+        self.image = self.imageMasterNormal
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.vertex.point.x, self.vertex.point.y)
+
+    def update(self, names):
+        # if in list, activate
+        try:
+            if names.index(self.vertex.name) == 0:
+                self.image = self.imageMasterStart
+            elif names.index(self.vertex.name) == len(names) - 1:
+                self.image = self.imageMasterEnd
+            elif names.index(self.vertex.name) > -1:
+                self.image = self.imageMasterOnPath
+            else:
+                self.image = self.imageMasterNormal
+        except ValueError:
+            pass
+
+
+class Path(pygame.sprite.Sprite):
+    def __init__(self, p1, p2):
+        pygame.sprite.Sprite.__init__(self)
+
+        # make a sprite for the point
+        self.imageMasterNormal = pygame.Surface([960, 960])
+        self.imageMasterNormal.fill((0, 0, 0))
+        self.imageMasterNormal.set_colorkey((0, 0, 0))
+        pygame.draw.line(self.imageMasterNormal, (0, 0, 255), (p1.x, p1.y), (p2.x, p2.y))
+        self.imageMasterNormal = self.imageMasterNormal.convert_alpha()
+
+        self.imageMasterActive = pygame.Surface([960, 960])
+        self.imageMasterActive.fill((0, 0, 0))
+        self.imageMasterActive.set_colorkey((0, 0, 0))
+        pygame.draw.line(self.imageMasterActive, (0, 0, 255), (p1.x, p1.y), (p2.x, p2.y))
+        self.imageMasterActive = self.imageMasterActive.convert_alpha()
+
+        self.image = self.imageMasterNormal
+        self.rect = self.image.get_rect()
+        self.rect.center = (480, 480)
+
+    def update(self, active):
+        if active:
+            self.image = self.imageMasterActive
+        else:
+            self.image = self.imageMasterNormal
+
+
 class Robot(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)

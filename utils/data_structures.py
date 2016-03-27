@@ -122,3 +122,17 @@ class Point3:
         yield self.y
         yield self.x
         yield self.r
+
+
+class Vertex(object):
+    def __init__(self, name='', point=Point2()):
+        self.name = name
+        self.point = point
+        self.edges = []
+
+
+class Edge(object):
+    def __init__(self, v1=Point2(), v2=Point2()):
+        self.start = v1
+        self.end = v2
+        self.length = self.start.distance(self.end)

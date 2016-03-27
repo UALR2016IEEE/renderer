@@ -45,6 +45,10 @@ def main():
                 r.update_robot(data[1])
             elif data[0] == 'lidar-points':
                 r.paint_lidar(data[1])
+            elif data[0] == 'add-points':
+                r.set_points(data[1])
+            elif data[0] == 'activate-points':
+                r.activate_points(data[1])
 
             # commands used for lidar-test rendering
             elif data[0] == 'lidar-test-points':
