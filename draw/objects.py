@@ -119,7 +119,7 @@ class Lidar(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
 
-    def update(self, data, aggregate=False):
+    def update(self, data, aggregate=False, cart=False):
         if not aggregate:
             # print(data[0].x, data[0].y, math.degrees(data[0].r))
             self.image.fill((0, 0, 0))
@@ -133,8 +133,12 @@ class Lidar(pygame.sprite.Sprite):
         for idx in range(scans.shape[1]):
             if scans[0, idx] > 0:
                 # turn scan data back to tenths of an inch
-                dx = scans[0, idx] * math.cos(scans[1, idx] + angle) / 2.54
-                dy = -scans[0, idx] * math.sin(scans[1, idx] + angle) / 2.54
+                if cart:
+                    dx = scans[0, idx] / 2.54
+                    dy = -scans[1, idx] / 2.54
+                else:
+                    dx = scans[0, idx] * math.cos(scans[1, idx] + angle) / 2.54
+                    dy = -scans[0, idx] * math.sin(scans[1, idx] + angle) / 2.54
                 # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
 
                 fx = int(rx + dx)
