@@ -36,9 +36,7 @@ def main():
             elif data[0] == 'lidar-test':
                 r.reset()
                 r.setup_lidar_test()
-            elif data[0] == 'lidar-test-cart':
-                r.reset()
-                r.setup_lidar_test()
+            elif data[0] == 'lidar-cart':
                 r.cart = True
 
             # commands used for full-simulation rendering
