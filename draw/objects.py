@@ -130,13 +130,18 @@ class Lidar(pygame.sprite.Sprite):
 
         first = True
 
+        rhos = []
+        phis = []
+
         for idx in range(scans.shape[1]):
             if scans[0, idx] > 0:
                 # turn scan data back to tenths of an inch
                 if cart:
                     # get magnitude rho
-                    rho = math.sqrt(math.pow(scans[0, idx], 2) + math.pow(scans[1, idx], 2))
+                    rho = math.sqrt(scans[0, idx]**2 + scans[1, idx]**2)
                     phi = math.atan2(scans[1, idx], scans[0, idx]) + angle
+                    rhos.append(rho)
+                    phis.append(phi)
                     dx = rho * math.cos(phi) / 2.54
                     dy = -rho * math.sin(phi) / 2.54
                 else:
@@ -155,6 +160,8 @@ class Lidar(pygame.sprite.Sprite):
                         first = False
                     else:
                         pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(fx), int(fy)))
+        print('rhos', rhos)
+        print('phis', phis)
 
 
 class Background(pygame.sprite.Sprite):
