@@ -134,8 +134,11 @@ class Lidar(pygame.sprite.Sprite):
             if scans[0, idx] > 0:
                 # turn scan data back to tenths of an inch
                 if cart:
-                    dx = scans[0, idx] / 2.54
-                    dy = -scans[1, idx] / 2.54
+                    # get magnitude rho
+                    rho = math.sqrt(math.pow(scans[0, idx], 2) + math.pow(scans[1, idx], 2))
+                    phi = math.atan2(scans[1, idx], scans[0, idx]) + angle
+                    dx = rho * math.cos(phi) / 2.54
+                    dy = -rho * math.sin(phi) / 2.54
                 else:
                     dx = scans[0, idx] * math.cos(scans[1, idx] + angle) / 2.54
                     dy = -scans[0, idx] * math.sin(scans[1, idx] + angle) / 2.54
