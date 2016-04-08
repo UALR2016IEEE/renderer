@@ -17,6 +17,7 @@ class Renderer:
         self.secondary_objects = None
         self.aggregate_lidar = False
         self.cart = False
+        self.lidar_lines = True
 
         self.robot_pos = Point3()
 
@@ -25,6 +26,7 @@ class Renderer:
         self.update = None
         self.aggregate_lidar = False
         self.cart = False
+        self.lidar_lines = True
         if self.primary_objects is not None:
             [self.primary_objects.remove_sprites_of_layer(i) for i in range(6)]
         if self.secondary_objects is not None:
@@ -94,14 +96,14 @@ class Renderer:
     def paint_lidar(self, data):
         if self.primary_objects is not None:
             lidar_primary = self.primary_objects.get_sprites_from_layer(2)[0]
-            lidar_primary.update(data, cart=self.cart)
+            lidar_primary.update(data, cart=self.cart, lines=self.lidar_lines)
         if self.secondary_objects is not None:
             lidar_secondary = self.secondary_objects.get_sprites_from_layer(2)[0]
-            lidar_secondary.update(data, cart=self.cart)
+            lidar_secondary.update(data, cart=self.cart, lines=self.lidar_lines)
 
         if self.aggregate_lidar and self.secondary_objects is not None:
             lidar_secondary_aggregate = self.secondary_objects.get_sprites_from_layer(1)[0]
-            lidar_secondary_aggregate.update(data, aggregate=True, cart=self.cart)
+            lidar_secondary_aggregate.update(data, aggregate=True, cart=self.cart, lines=self.lidar_lines)
 
     def update_screen(self):
         if self.update == 'full-simulation':

@@ -119,7 +119,7 @@ class Lidar(pygame.sprite.Sprite):
         self.image.set_colorkey((0, 0, 0))
         self.rect = self.image.get_rect()
 
-    def update(self, data, aggregate=False, cart=False):
+    def update(self, data, aggregate=False, cart=False, lines=False):
         if not aggregate:
             # print(data[0].x, data[0].y, math.degrees(data[0].r))
             self.image.fill((0, 0, 0))
@@ -150,11 +150,13 @@ class Lidar(pygame.sprite.Sprite):
                 pygame.draw.rect(self.image, (255, 0, 0), (int(rx + dx), int(ry + dy), 2, 2))
                 if not aggregate:
                     if first:
-                        pygame.draw.line(self.image, (0, 0, 255), (rx, ry), (int(fx), int(fy)))
+                        if lines:
+                            pygame.draw.line(self.image, (0, 0, 255), (rx, ry), (int(fx), int(fy)))
                         pygame.draw.rect(self.image, (0, 0, 255), (int(fx), int(fy), 2, 2))
                         first = False
                     else:
-                        pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(fx), int(fy)))
+                        if lines:
+                            pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(fx), int(fy)))
 
 
 class Background(pygame.sprite.Sprite):

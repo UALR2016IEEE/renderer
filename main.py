@@ -22,22 +22,23 @@ def main():
         if not s.incoming.empty():
             data = s.incoming.get()
 
-            # top level render control commands
             if data[0] == 'reset':
                 r.reset()
-            elif data[0] == 'full-simulation':
-                r.reset()
-                r.setup_full_simulation()
 
-                # have the server set up the grid by defualt - can still do grid-colors and reset if needed
-                sim = simulate.controller.Controller(Point3())
-                sim.init_grid()
-                r.set_grid(sim.grid.get_pygame_grid())
-            elif data[0] == 'lidar-test':
+            if data[0] == 'config':
                 r.reset()
-                r.setup_lidar_test()
-            elif data[0] == 'lidar-cart':
-                r.cart = True
+                if 'full-simulation' in data[1]:
+                    r.setup_full_simulation()
+                    # have the server set up the grid by defualt - can still do grid-colors and reset if needed
+                    sim = simulate.controller.Controller(Point3())
+                    sim.init_grid()
+                    r.set_grid(sim.grid.get_pygame_grid())
+                if 'lidar-test' in data[1]:
+                    r.setup_lidar_test()
+                if 'lidar-cart' in data[1]:
+                    r.cart = True
+                if 'no-lidar-lines' in data[1]:
+                    r.lidar_lines = False
 
             # commands used for full-simulation rendering
             elif data[0] == 'grid-colors':
