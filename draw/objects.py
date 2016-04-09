@@ -188,8 +188,8 @@ class Background(pygame.sprite.Sprite):
             self.make_distance_circles()
 
         # box region is defined as ((x_lower, x_upper), (y_lower, y_upper))
-        x = data[0][0] / 2.54
+        x = data[1][0] / 2.54
         w = (data[0][1] - data[0][0]) / 2.54
-        y = data[1][0] / 2.54
-        h = (data[1][1] - data[1][0]) / 2.54
-        pygame.draw.rect(self.image, (0, 0, 255), (480 - x, 480 - y, w, h), 1)
+        y = data[0][0] / 2.54
+        h = (data[1][0] - data[1][1]) / 2.54
+        pygame.draw.rect(self.image, (0, 0, 255), (480 + x, 480 + y, -h, w), 1)

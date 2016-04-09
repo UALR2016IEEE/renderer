@@ -119,6 +119,8 @@ class Renderer:
             self.screen.blit(mouse, (20, 60))
         elif self.update == 'lidar-test':
             self.primary_objects.draw(self.screen)
+            label = self.font.render('(x= ' + str((pygame.mouse.get_pos()[1] - 480) * 2.54) + ' , y= ' + str((pygame.mouse.get_pos()[0] - 480) * 2.54) + ' )', 1, (0, 255, 0))
+            self.screen.blit(label, (20, 60))
         else:
             self.screen.blit(self.label, (0, 0))
         pygame.display.flip()
