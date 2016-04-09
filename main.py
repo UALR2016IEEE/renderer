@@ -56,6 +56,8 @@ def main():
             # commands used for lidar-test rendering
             elif data[0] == 'lidar-test-points':
                 r.paint_lidar((lidar_pos, data[1]))
+            elif data[0] == 'lidar-box':
+                r.set_lidar_box(data[1])
 
         # process pygame events
         for event in pygame.event.get():

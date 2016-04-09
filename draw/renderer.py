@@ -67,6 +67,10 @@ class Renderer:
         # add the lidar overlay
         self.primary_objects.add(draw.objects.Lidar(), layer=2)
 
+    def set_lidar_box(self, data):
+        background = self.primary_objects.get_sprites_from_layer(0)[0]
+        background.update_box(data)
+
     def set_grid(self, g):
         # grid should be bottom-most layer
         grid = draw.objects.Grid()

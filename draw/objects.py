@@ -168,11 +168,28 @@ class Background(pygame.sprite.Sprite):
         self.image = pygame.Surface([960, 960])
         self.image.fill((0, 0, 0))
         self.rect = self.image.get_rect()
+        self.distances = distances
 
-        if distances:
+        if self.distances:
             self.make_distance_circles()
 
     def make_distance_circles(self):
         for i in range(1, 5):
             pygame.draw.circle(self.image, (128, 128, 128), (480, 480), i * 120, 4)
-        pygame.draw.rect(self.image, (0, 0, 255), (480 - (200 / 2.54), 480 - (180 / 2.54), 400 / 2.54, 220 / 2.54), 1)
+        # pygame.draw.rect(self.image, (0, 0, 255), (480 - (200 / 2.54), 480 - (180 / 2.54), 400 / 2.54, 220 / 2.54), 1)
+            
+    def update_box(self, data):
+        # need to regenerate background
+        self.image = pygame.Surface([960, 960])
+        self.image.fill((0, 0, 0))
+        self.rect = self.image.get_rect()
+
+        if self.distances:
+            self.make_distance_circles()
+
+        # box region is defined as ((x_lower, x_upper), (y_lower, y_upper))
+        x = data[0][0] / 2.54
+        w = (data[0][1] - data[0][0]) / 2.54
+        y = data[1][0] / 2.54
+        h = (data[1][1] - data[1][0]) / 2.54
+        pygame.draw.rect(self.image, (0, 0, 255), (480 - x, 480 - y, w, h), 1)
