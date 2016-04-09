@@ -20,7 +20,7 @@ class Grid(pygame.sprite.Sprite):
 class Point(pygame.sprite.Sprite):
     def __init__(self, vertex):
         pygame.sprite.Sprite.__init__(self)
-        
+
         self.vertex = vertex
 
         # make a sprite for the point
@@ -98,7 +98,7 @@ class Robot(pygame.sprite.Sprite):
         pygame.draw.circle(self.imageMaster, (255, 255, 255), (30, 30), 10)
         pygame.draw.line(self.imageMaster, (255, 0, 0), (30, 30), (60, 30))
         self.imageMaster = self.imageMaster.convert_alpha()
-        
+
         self.image = self.imageMaster
         self.rect = self.image.get_rect()
         self.rect.center = (30, 30)
@@ -134,13 +134,13 @@ class Lidar(pygame.sprite.Sprite):
             # turn scan data back to tenths of an inch
             if cart:
                 # get magnitude rho
-                rho = math.sqrt(scans[0, idx]**2 + scans[1, idx]**2)
-                phi = math.atan2(scans[1, idx], scans[0, idx]) + angle
+                rho = math.sqrt(scans[0, idx] ** 2 + scans[1, idx] ** 2)
+                phi = math.atan2(scans[1, idx], scans[0, idx])
                 dx = rho * math.cos(phi) / 2.54
                 dy = -rho * math.sin(phi) / 2.54
             else:
-                dx = scans[0, idx] * math.cos(scans[1, idx] + angle) / 2.54
-                dy = -scans[0, idx] * math.sin(scans[1, idx] + angle) / 2.54
+                dx = scans[0, idx] * math.cos(scans[1, idx]) / 2.54
+                dy = -scans[0, idx] * math.sin(scans[1, idx]) / 2.54
             # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
 
             fx = int(rx + dx)
@@ -175,3 +175,4 @@ class Background(pygame.sprite.Sprite):
     def make_distance_circles(self):
         for i in range(1, 5):
             pygame.draw.circle(self.image, (128, 128, 128), (480, 480), i * 120, 4)
+        pygame.draw.rect(self.image, (0, 0, 255), (480 - (200 / 2.54), 480 - (180 / 2.54), 400 / 2.54, 220 / 2.54), 1)
