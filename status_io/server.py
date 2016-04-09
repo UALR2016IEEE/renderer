@@ -30,14 +30,14 @@ class IOHandler(multiprocessing.Process):
                 #     print(data[1][0].y, data[1][0].x, data[1][0].r)
                 #     for i in range(10):
                 #         print(data[1][1][i])
-
+                print('Command Recieved ', data[0])
                 incoming.put(data)
             except (ConnectionError, EOFError):
                 print("connection error with client, closed")
                 break
 
     def io_inf(self, incoming, outgoing, halt):
-        host, port = 'localhost', 9998
+        host, port = '', 9998
         server = multiprocessing.connection.Listener((host, port))
         print('server running, waiting for client connection')
         while not halt.value:

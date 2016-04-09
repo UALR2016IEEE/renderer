@@ -131,32 +131,34 @@ class Lidar(pygame.sprite.Sprite):
         first = True
 
         for idx in range(scans.shape[1]):
-            if scans[0, idx] > 0:
-                # turn scan data back to tenths of an inch
-                if cart:
-                    # get magnitude rho
-                    rho = math.sqrt(scans[0, idx]**2 + scans[1, idx]**2)
-                    phi = math.atan2(scans[1, idx], scans[0, idx]) + angle
-                    dx = rho * math.cos(phi) / 2.54
-                    dy = -rho * math.sin(phi) / 2.54
-                else:
-                    dx = scans[0, idx] * math.cos(scans[1, idx] + angle) / 2.54
-                    dy = -scans[0, idx] * math.sin(scans[1, idx] + angle) / 2.54
-                # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
+            # turn scan data back to tenths of an inch
+            if cart:
+                # get magnitude rho
+                rho = math.sqrt(scans[0, idx]**2 + scans[1, idx]**2)
+                phi = math.atan2(scans[1, idx], scans[0, idx]) + angle
+                dx = rho * math.cos(phi) / 2.54
+                dy = -rho * math.sin(phi) / 2.54
+            else:
+                dx = scans[0, idx] * math.cos(scans[1, idx] + angle) / 2.54
+                dy = -scans[0, idx] * math.sin(scans[1, idx] + angle) / 2.54
+            # print('dx', dx, 'dy', dy, 'angle', math.degrees(scan[1] + angle), 'x-adjust', (math.cos(scan[1] + angle)), 'y-adjust', (math.sin(scan[1] + angle)))
 
-                fx = int(rx + dx)
-                fy = int(ry + dy)
+            fx = int(rx + dx)
+            fy = int(ry + dy)
 
+            if cart or scans[0, idx] > 0:
+                # plot the terminating point of the scan as a red dot
                 pygame.draw.rect(self.image, (255, 0, 0), (int(rx + dx), int(ry + dy), 2, 2))
                 if not aggregate:
                     if first:
+                        # first line gets to be blue
                         if lines:
                             pygame.draw.line(self.image, (0, 0, 255), (rx, ry), (int(fx), int(fy)))
                         pygame.draw.rect(self.image, (0, 0, 255), (int(fx), int(fy), 2, 2))
                         first = False
-                    else:
-                        if lines:
-                            pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(fx), int(fy)))
+                    elif lines:
+                        # rest of the lines are red
+                        pygame.draw.line(self.image, (255, 0, 0), (rx, ry), (int(fx), int(fy)))
 
 
 class Background(pygame.sprite.Sprite):
