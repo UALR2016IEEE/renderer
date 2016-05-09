@@ -66,6 +66,10 @@ class Renderer:
         self.primary_objects.add(draw.objects.Background(distances=True), layer=0)
         # add the lidar overlay
         self.primary_objects.add(draw.objects.Lidar(), layer=2)
+        # add robot
+        robot = draw.objects.Robot()
+        robot.update(Point3(480, 480, 0))
+        self.primary_objects.add(robot, layer=3)
 
     def set_lidar_box(self, data):
         background = self.primary_objects.get_sprites_from_layer(0)[0]
